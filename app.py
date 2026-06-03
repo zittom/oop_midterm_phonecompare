@@ -200,7 +200,7 @@ demo_products = [
                      "OnePlus", 4.5, 130,
                      "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/o/n/oneplus-12_2_.png"),
     ]
-    ]
+    
 
     saved = repo.bulk_upsert(demo_products)
     return jsonify({"message": f"Seeded {saved} demo products ✓"})
