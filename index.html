@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhoneCompare VN – So sánh giá điện thoại</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d0f;
+    --bg2: #141417;
+    --bg3: #1c1c21;
+    --bg4: #242429;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f2;
+    --text2: #9999a8;
+    --text3: #5c5c70;
+    --accent: #6c5ef5;
+    --accent2: #8b7cff;
+    --accent-glow: rgba(108,94,245,0.25);
+    --green: #2ec97d;
+    --amber: #f5a623;
+    --red: #f05454;
+    --cellphones: #e84c4c;
+    --fptshop: #ff6b00;
+    --tgdd: #0068ff;
+    --radius: 12px;
+    --radius-lg: 18px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,13,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; gap: 2rem;
+    height: 64px;
+  }
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem; font-weight: 600;
+    background: linear-gradient(135deg, var(--accent2), #c084fc);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    white-space: nowrap;
+  }
+  .logo span { -webkit-text-fill-color: var(--text2); font-weight: 400; font-size: 0.75rem; }
+  nav { display: flex; gap: 1.5rem; }
+  nav a {
+    font-size: 0.875rem; color: var(--text2); text-decoration: none;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+
+  /* ── Hero search ── */
+  .hero {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+    max-width: 800px; margin: 0 auto;
+  }
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 600; line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent2) 0%, #c084fc 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p { color: var(--text2); margin-bottom: 2rem; font-size: 1rem; }
+
+  .search-wrap {
+    display: flex; gap: 0.5rem;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 99px;
+    padding: 6px 6px 6px 1.25rem;
+    transition: border-color .2s, box-shadow .2s;
+    max-width: 600px; margin: 0 auto;
+  }
+  .search-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .search-wrap input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--text); font-family: inherit; font-size: 1rem;
+  }
+  .search-wrap input::placeholder { color: var(--text3); }
+  .btn-search {
+    background: var(--accent);
+    color: #fff; border: none; cursor: pointer;
+    padding: 0.5rem 1.25rem;
+    border-radius: 99px;
+    font-family: inherit; font-size: 0.875rem; font-weight: 500;
+    transition: background .2s, transform .1s;
+    display: flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+  .btn-search:hover { background: var(--accent2); }
+  .btn-search:active { transform: scale(0.97); }
+
+  /* Source toggle */
+  .source-toggle {
+    display: flex; gap: 0.5rem; justify-content: center;
+    margin-top: 1rem; flex-wrap: wrap;
+  }
+  .badge-toggle {
+    padding: 4px 12px; border-radius: 99px; font-size: 0.8rem;
+    border: 1px solid var(--border2); cursor: pointer;
+    background: var(--bg3); color: var(--text2);
+    transition: all .2s;
+  }
+  .badge-toggle.live {
+    background: rgba(108,94,245,0.15);
+    border-color: var(--accent);
+    color: var(--accent2);
+  }
+
+  /* ── Brands quick filter ── */
+  .brand-pills {
+    display: flex; gap: 0.5rem; justify-content: center;
+    flex-wrap: wrap; padding: 1rem 2rem 0;
+  }
+  .pill {
+    padding: 5px 14px; border-radius: 99px; font-size: 0.8rem;
+    border: 1px solid var(--border); cursor: pointer;
+    color: var(--text2); background: var(--bg2);
+    transition: all .2s;
+  }
+  .pill:hover, .pill.active {
+    background: var(--bg4); border-color: var(--border2); color: var(--text);
+  }
+  .pill.active { border-color: var(--accent); color: var(--accent2); }
+
+  /* ── Main layout ── */
+  .main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    display: flex; gap: 1rem; align-items: center;
+    margin-bottom: 1.5rem; flex-wrap: wrap;
+  }
+  .filter-bar select, .filter-bar input[type=range] {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px; padding: 6px 12px;
+    font-family: inherit; font-size: 0.875rem; outline: none;
+    cursor: pointer; transition: border-color .2s;
+  }
+  .filter-bar select:focus { border-color: var(--accent); }
+  .filter-bar label { font-size: 0.8rem; color: var(--text2); }
+  .count-badge {
+    margin-left: auto; font-size: 0.8rem; color: var(--text3);
+  }
+
+  /* ── Price range ── */
+  .price-range-wrap {
+    display: flex; align-items: center; gap: 8px;
+  }
+  input[type=range] {
+    -webkit-appearance: none; width: 140px; height: 4px;
+    border-radius: 99px; background: var(--bg4); border: none !important; padding: 0 !important;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px;
+    border-radius: 50%; background: var(--accent); cursor: pointer;
+  }
+
+  /* ── Product grid ── */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .product-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: border-color .25s, transform .2s, box-shadow .25s;
+    position: relative;
+    display: flex; flex-direction: column; gap: 0.75rem;
+  }
+  .product-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .product-card.cheapest-badge::before {
+    content: "Rẻ nhất";
+    position: absolute; top: -1px; right: 1rem;
+    background: var(--green);
+    color: #fff; font-size: 0.7rem; font-weight: 600;
+    padding: 3px 10px; border-radius: 0 0 8px 8px;
+  }
+
+  .card-img {
+    width: 100%; aspect-ratio: 1; object-fit: contain;
+    background: var(--bg3); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; overflow: hidden;
+  }
+  .card-img img { width: 100%; height: 100%; object-fit: contain; }
+
+  .source-dot {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .03em;
+    padding: 2px 8px; border-radius: 99px;
+  }
+  .source-dot.Cellphones { background: rgba(232,76,76,.15); color: var(--cellphones); }
+  .source-dot.FPTShop { background: rgba(255,107,0,.15); color: var(--fptshop); }
+  .source-dot.Thegioididong { background: rgba(0,104,255,.15); color: var(--tgdd); }
+
+  .card-name {
+    font-size: 0.9rem; font-weight: 500; line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.3rem; font-weight: 600; color: var(--accent2);
+  }
+  .card-rating {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.8rem; color: var(--text2);
+  }
+  .stars { color: var(--amber); letter-spacing: -1px; }
+
+  .card-footer {
+    margin-top: auto;
+    display: flex; gap: 0.5rem;
+  }
+  .btn-visit {
+    flex: 1; padding: 8px; border-radius: 8px;
+    font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    border: 1px solid var(--border2); background: none;
+    color: var(--text2); font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-visit:hover { background: var(--bg4); color: var(--text); }
+  .btn-compare-add {
+    padding: 8px 12px; border-radius: 8px;
+    font-size: 0.8rem; cursor: pointer;
+    border: 1px solid var(--accent);
+    background: rgba(108,94,245,.12);
+    color: var(--accent2); font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-compare-add:hover { background: rgba(108,94,245,.25); }
+
+  /* ── Compare tray ── */
+  .compare-tray {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    background: rgba(20,20,23,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border2);
+    padding: 1rem 2rem;
+    display: none; align-items: center; gap: 1rem;
+    transform: translateY(100%);
+    transition: transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  .compare-tray.visible { display: flex; transform: translateY(0); }
+  .tray-items { display: flex; gap: 0.75rem; flex: 1; flex-wrap: wrap; }
+  .tray-item {
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 6px 12px;
+    font-size: 0.8rem; display: flex; align-items: center; gap: 6px;
+  }
+  .tray-remove {
+    background: none; border: none; cursor: pointer;
+    color: var(--text3); font-size: 1rem; line-height: 1;
+    padding: 0 2px;
+  }
+  .btn-compare-now {
+    background: var(--accent); color: #fff;
+    border: none; cursor: pointer; padding: 10px 1.5rem;
+    border-radius: 99px; font-family: inherit; font-weight: 500;
+    font-size: 0.875rem; white-space: nowrap;
+    transition: background .2s;
+  }
+  .btn-compare-now:hover { background: var(--accent2); }
+
+  /* ── Compare modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,0.75);
+    display: none; align-items: flex-start; justify-content: center;
+    overflow-y: auto; padding: 4rem 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-lg);
+    padding: 2rem; width: 100%; max-width: 900px;
+  }
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .modal-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; }
+  .modal-close {
+    background: none; border: none; cursor: pointer;
+    color: var(--text2); font-size: 1.5rem; line-height: 1;
+    padding: 4px 8px; border-radius: 6px;
+    transition: background .2s;
+  }
+  .modal-close:hover { background: var(--bg4); color: var(--text); }
+
+  /* Compare table */
+  .compare-table { width: 100%; border-collapse: collapse; }
+  .compare-table th {
+    background: var(--bg3); padding: 0.75rem 1rem;
+    text-align: center; font-size: 0.85rem; font-weight: 500;
+    border-bottom: 1px solid var(--border2);
+  }
+  .compare-table td {
+    padding: 0.65rem 1rem; text-align: center;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.875rem;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td:first-child {
+    text-align: left; color: var(--text2); font-size: 0.8rem;
+    font-weight: 500; text-transform: uppercase; letter-spacing: .04em;
+    white-space: nowrap;
+  }
+  .compare-table .highlight-price {
+    color: var(--green); font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1rem 1.25rem;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .05em; }
+  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 600; }
+  .stat-value.green { color: var(--green); }
+  .stat-value.purple { color: var(--accent2); }
+
+  /* ── Loading skeleton ── */
+  .skeleton {
+    background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 8px;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
+  /* ── Empty / error states ── */
+  .empty-state {
+    text-align: center; padding: 4rem 2rem;
+    color: var(--text2);
+  }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+  .empty-state h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: var(--bg4); border: 1px solid var(--border2);
+    border-radius: 99px; padding: 8px 1.25rem; font-size: 0.875rem;
+    opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 600px) {
+    header { padding: 0 1rem; }
+    nav { display: none; }
+    .main { padding: 1rem; }
+    .hero { padding: 2rem 1rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">PhoneCompare <span>VN</span></div>
+  <nav>
+    <a href="#" onclick="loadAll()">Tất cả</a>
+    <a href="#stats-section">Thống kê</a>
+    <a href="https://github.com" target="_blank">GitHub ↗</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>So sánh giá<br><em>điện thoại</em> thông minh</h1>
+  <p>Tổng hợp từ Cellphones · FPTShop · Thế Giới Di Động — realtime</p>
+  <div class="search-wrap">
+    <input id="searchInput" type="text" placeholder="Tìm điện thoại... VD: iPhone 15, Samsung S24"
+           onkeydown="if(event.key==='Enter') doSearch()">
+    <button class="btn-search" onclick="doSearch()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Tìm kiếm
+    </button>
+  </div>
+  <div class="source-toggle">
+    <span style="font-size:0.8rem;color:var(--text3)">Nguồn dữ liệu:</span>
+    <button class="badge-toggle active" id="togDB" onclick="setSource('db')">📦 Database</button>
+    <button class="badge-toggle live" id="togLive" onclick="setSource('live')">🌐 Crawl trực tiếp</button>
+  </div>
+</section>
+
+<div class="brand-pills" id="brandPills">
+  <span class="pill active" onclick="filterBrand(null,this)">Tất cả</span>
+</div>
+
+<div class="main">
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card">
+      <div class="stat-label">Tổng sản phẩm</div>
+      <div class="stat-value purple" id="statTotal">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Giá thấp nhất</div>
+      <div class="stat-value green" id="statCheap">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Nguồn dữ liệu</div>
+      <div class="stat-value" id="statSources">3</div>
+    </div>
+    <div class="stat-card" id="stats-section">
+      <div class="stat-label">Đang hiển thị</div>
+      <div class="stat-value" id="statShowing">—</div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <select id="sortSel" onchange="applyFilters()">
+      <option value="price_asc">Giá: Thấp → Cao</option>
+      <option value="price_desc">Giá: Cao → Thấp</option>
+      <option value="rating">Đánh giá cao nhất</option>
+    </select>
+    <div class="price-range-wrap">
+      <label for="priceRange">≤</label>
+      <input type="range" id="priceRange" min="1000000" max="50000000"
+             step="500000" value="50000000" oninput="updatePriceLabel()">
+      <label id="priceLabel" style="font-size:0.8rem;color:var(--text2);min-width:80px">Tất cả</label>
+    </div>
+    <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem">
+      <input type="checkbox" id="chkRating" onchange="applyFilters()"> ★ ≥ 4.5
+    </label>
+    <span class="count-badge" id="countBadge"></span>
+  </div>
+
+  <!-- Product grid -->
+  <div class="product-grid" id="productGrid">
+    <div class="empty-state" style="grid-column:1/-1">
+      <div class="icon">🔍</div>
+      <h3>Nhập từ khóa để tìm điện thoại</h3>
+      <p style="font-size:0.875rem;margin-top:4px">Hoặc <button onclick="loadAll()" style="background:none;border:none;color:var(--accent2);cursor:pointer;font-size:inherit">xem tất cả sản phẩm</button></p>
+    </div>
+  </div>
+</div>
+
+<!-- Compare tray -->
+<div class="compare-tray" id="compareTray">
+  <span style="font-size:0.85rem;color:var(--text2);white-space:nowrap">So sánh:</span>
+  <div class="tray-items" id="trayItems"></div>
+  <button class="btn-compare-now" onclick="openCompareModal()">So sánh ngay →</button>
+  <button onclick="clearTray()" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:0.8rem">Xóa</button>
+</div>
+
+<!-- Compare modal -->
+<div class="modal-overlay" id="compareModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>So sánh chi tiết</h2>
+      <button class="modal-close" onclick="closeCompareModal()">✕</button>
+    </div>
+    <div id="compareContent"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '/api';
+let allProducts = [];
+let compareList = [];
+let currentBrand = null;
+let searchSource = 'db';
+
+/* ── API helpers ── */
+async function apiFetch(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+/* ── Init ── */
+async function init() {
+  await loadStats();
+  await loadBrands();
+  await loadAll();
+}
+
+async function loadStats() {
+  try {
+    const d = await apiFetch(`${API}/stats`);
+    document.getElementById('statTotal').textContent = d.total_products.toLocaleString();
+    if (d.cheapest) {
+      document.getElementById('statCheap').textContent = formatPrice(d.cheapest.price);
+    }
+  } catch {}
+}
+
+async function loadBrands() {
+  try {
+    const brands = await apiFetch(`${API}/brands`);
+    const wrap = document.getElementById('brandPills');
+    brands.forEach(b => {
+      const el = document.createElement('span');
+      el.className = 'pill';
+      el.textContent = b;
+      el.onclick = () => filterBrand(b, el);
+      wrap.appendChild(el);
+    });
+  } catch {}
+}
+
+async function loadAll() {
+  showSkeletons();
+  try {
+    const d = await apiFetch(`${API}/products?limit=100`);
+    allProducts = d.products;
+    applyFilters();
+  } catch(e) {
+    showError('Không thể kết nối API. Hãy chạy <code>python app.py</code> trước!');
+  }
+}
+
+/* ── Search ── */
+async function doSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) return loadAll();
+  showSkeletons();
+  try {
+    const d = await apiFetch(`${API}/search?q=${encodeURIComponent(q)}&source=${searchSource}`);
+    allProducts = d.products;
+    applyFilters();
+  } catch (e) {
+    showError('Lỗi khi tìm kiếm. Kiểm tra kết nối API.');
+  }
+}
+
+function setSource(src) {
+  searchSource = src;
+  document.getElementById('togDB').classList.toggle('live', src === 'db');
+  document.getElementById('togLive').classList.toggle('live', src === 'live');
+  document.getElementById('togDB').classList.toggle('active', src === 'db');
+}
+
+/* ── Filters + sort ── */
+function applyFilters() {
+  let products = [...allProducts];
+
+  if (currentBrand) {
+    products = products.filter(p => p.brand === currentBrand);
+  }
+
+  const maxPrice = parseInt(document.getElementById('priceRange').value);
+  if (maxPrice < 50000000) {
+    products = products.filter(p => p.price <= maxPrice);
+  }
+
+  if (document.getElementById('chkRating').checked) {
+    products = products.filter(p => p.rating >= 4.5);
+  }
+
+  const sort = document.getElementById('sortSel').value;
+  if (sort === 'price_asc') products.sort((a,b) => a.price - b.price);
+  else if (sort === 'price_desc') products.sort((a,b) => b.price - a.price);
+  else products.sort((a,b) => (b.rating - a.rating) || (b.review_count - a.review_count));
+
+  renderProducts(products);
+  document.getElementById('statShowing').textContent = products.length;
+  document.getElementById('countBadge').textContent = `${products.length} sản phẩm`;
+}
+
+function updatePriceLabel() {
+  const v = parseInt(document.getElementById('priceRange').value);
+  document.getElementById('priceLabel').textContent = v >= 50000000 ? 'Tất cả' : formatPrice(v);
+  applyFilters();
+}
+
+function filterBrand(brand, el) {
+  currentBrand = brand;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+/* ── Render ── */
+function renderProducts(products) {
+  const grid = document.getElementById('productGrid');
+  if (!products.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <div class="icon">😕</div>
+      <h3>Không tìm thấy sản phẩm phù hợp</h3>
+      <p style="font-size:0.875rem;margin-top:4px;color:var(--text3)">Thử từ khóa khác hoặc mở rộng bộ lọc</p>
+    </div>`;
+    return;
+  }
+
+  const minPrice = Math.min(...products.map(p => p.price));
+
+  grid.innerHTML = products.map(p => {
+    const isCheapest = p.price === minPrice;
+    const stars = renderStars(p.rating);
+    const inCompare = compareList.some(c => c.url === p.url);
+    const srcKey = p.source === 'Thegioididong' ? 'Thegioididong' : p.source;
+
+    return `<div class="product-card ${isCheapest ? 'cheapest-badge' : ''}" id="card-${btoa(p.url||p.name).slice(0,12)}">
+      <div class="card-img">
+        ${p.image_url
+          ? `<img src="${p.image_url}" alt="${p.name}" onerror="this.parentNode.innerHTML='📱'">`
+          : '📱'}
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span class="source-dot ${srcKey}">${p.source}</span>
+        <span style="font-size:0.75rem;color:var(--text3)">${p.brand}</span>
+      </div>
+      <div class="card-name" title="${p.name}">${p.name}</div>
+      <div class="card-price">${formatPrice(p.price)}</div>
+      ${p.rating ? `<div class="card-rating">
+        <span class="stars">${stars}</span>
+        <span>${p.rating.toFixed(1)} ${p.review_count ? `(${p.review_count.toLocaleString()})` : ''}</span>
+      </div>` : ''}
+      <div class="card-footer">
+        ${p.url ? `<button class="btn-visit" onclick="openLink('${p.url}')">Xem tại ${p.source} ↗</button>` : ''}
+        <button class="btn-compare-add ${inCompare ? 'added' : ''}"
+                onclick="toggleCompare(${JSON.stringify(p).replace(/"/g,'&quot;')}, this)">
+          ${inCompare ? '✓' : '+'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderStars(r) {
+  if (!r) return '';
+  const full = Math.floor(r), half = r % 1 >= 0.5;
+  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(5 - full - (half?1:0));
+}
+
+/* ── Compare ── */
+function toggleCompare(product, btn) {
+  const idx = compareList.findIndex(p => p.url === product.url && p.source === product.source);
+  if (idx >= 0) {
+    compareList.splice(idx, 1);
+    btn.textContent = '+';
+    btn.classList.remove('added');
+  } else {
+    if (compareList.length >= 4) { showToast('Tối đa 4 sản phẩm để so sánh'); return; }
+    compareList.push(product);
+    btn.textContent = '✓';
+    btn.classList.add('added');
+  }
+  updateTray();
+}
+
+function updateTray() {
+  const tray = document.getElementById('compareTray');
+  const items = document.getElementById('trayItems');
+  if (!compareList.length) {
+    tray.classList.remove('visible');
+    return;
+  }
+  tray.classList.add('visible');
+  items.innerHTML = compareList.map((p, i) =>
+    `<span class="tray-item">
+      ${p.name.slice(0,30)}...
+      <button class="tray-remove" onclick="removeFromTray(${i})">✕</button>
+    </span>`
+  ).join('');
+}
+
+function removeFromTray(i) {
+  compareList.splice(i, 1);
+  updateTray();
+  applyFilters(); // refresh card buttons
+}
+
+function clearTray() { compareList = []; updateTray(); applyFilters(); }
+
+function openCompareModal() {
+  if (compareList.length < 2) { showToast('Chọn ít nhất 2 sản phẩm'); return; }
+  const modal = document.getElementById('compareModal');
+  modal.classList.add('open');
+
+  const rows = [
+    ['Nguồn', p => `<span class="source-dot ${p.source}">${p.source}</span>`],
+    ['Giá', p => {
+      const minP = Math.min(...compareList.map(x => x.price));
+      return `<span class="${p.price === minP ? 'highlight-price' : ''}">${formatPrice(p.price)}</span>`;
+    }],
+    ['Thương hiệu', p => p.brand || '—'],
+    ['Đánh giá', p => p.rating ? `${p.rating.toFixed(1)} ★` : '—'],
+    ['Lượt đánh giá', p => p.review_count ? p.review_count.toLocaleString() : '—'],
+    ['Liên kết', p => p.url ? `<a href="${p.url}" target="_blank" style="color:var(--accent2);text-decoration:none;font-size:0.8rem">Mua ngay ↗</a>` : '—'],
+  ];
+
+  document.getElementById('compareContent').innerHTML = `
+    <table class="compare-table">
+      <thead><tr>
+        <th></th>
+        ${compareList.map(p => `<th>${p.name}</th>`).join('')}
+      </tr></thead>
+      <tbody>
+        ${rows.map(([label, fn]) => `
+          <tr>
+            <td>${label}</td>
+            ${compareList.map(p => `<td>${fn(p)}</td>`).join('')}
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+function closeCompareModal() {
+  document.getElementById('compareModal').classList.remove('open');
+}
+
+/* ── Helpers ── */
+function formatPrice(n) {
+  if (!n) return '—';
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+}
+
+function openLink(url) {
+  window.open(url, '_blank');
+}
+
+function showSkeletons() {
+  document.getElementById('productGrid').innerHTML =
+    Array(8).fill(`<div class="product-card">
+      <div class="skeleton" style="aspect-ratio:1;border-radius:10px;"></div>
+      <div class="skeleton" style="height:16px;width:60%;margin-top:4px"></div>
+      <div class="skeleton" style="height:22px;width:80%"></div>
+      <div class="skeleton" style="height:28px;width:50%"></div>
+    </div>`).join('');
+}
+
+function showError(msg) {
+  document.getElementById('productGrid').innerHTML =
+    `<div class="empty-state" style="grid-column:1/-1">
+      <div class="icon">⚠️</div>
+      <h3>Không thể tải dữ liệu</h3>
+      <p style="font-size:0.875rem;margin-top:8px">${msg}</p>
+      <p style="margin-top:1rem;font-size:0.8rem;color:var(--text3)">
+        Hướng dẫn: <code style="background:var(--bg3);padding:2px 6px;border-radius:4px">python app.py</code>
+        rồi mở <code style="background:var(--bg3);padding:2px 6px;border-radius:4px">localhost:5000/api/seed</code>
+      </p>
+    </div>`;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ── Close modal on overlay click ── */
+document.getElementById('compareModal').addEventListener('click', e => {
+  if (e.target.id === 'compareModal') closeCompareModal();
+});
+
+/* ── Start ── */
+init();
+</script>
+</body>
+</html>
