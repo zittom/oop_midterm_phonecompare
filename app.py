@@ -11,9 +11,6 @@ from crawler.manager import CrawlerManager, DataProcessor
 from database import ProductRepository
 
 app = Flask(__name__)
-@app.route("/")
-def serve_frontend():
-    return send_file("index.html")
 CORS(app)  # Cho phép frontend gọi API
 
 repo = ProductRepository()
@@ -22,6 +19,10 @@ processor = DataProcessor()
 
 
 # ─── API Endpoints ────────────────────────────────────────────────────────────
+
+@app.route("/")
+def serve_frontend():
+    return send_file("index.html")
 
 @app.get("/api/search")
 def search():
@@ -111,7 +112,7 @@ def seed_demo():
     from datetime import datetime
     from crawler.base_crawler import PhoneProduct
 
-demo_products = [
+    demo_products = [
         PhoneProduct("iPhone 15 Pro 256GB", 28990000, "Cellphones",
                      "https://cellphones.com.vn/iphone-15-pro.html",
                      "Apple", 4.8, 1240,
@@ -200,7 +201,6 @@ demo_products = [
                      "OnePlus", 4.5, 130,
                      "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/o/n/oneplus-12_2_.png"),
     ]
-    
 
     saved = repo.bulk_upsert(demo_products)
     return jsonify({"message": f"Seeded {saved} demo products ✓"})
